@@ -13,7 +13,7 @@ function Tracker() {
     });
 }
 
-Tracker.redisSetup = function(host, port, password) {
+Tracker.prototype.redisSetup = function(host, port, password) {
     var redis_host =  cf.redis?cf.redis.credentials.host:'localhost';
     var redis_port = cf.redis?cf.redis.credentials.port:6379;
     var redis_password = cf.redis?cf.redis.credentials.password:undefined;
@@ -25,7 +25,7 @@ Tracker.redisSetup = function(host, port, password) {
     }
 }
 
-Tracker.makeDate(tweet) {
+Tracker.prototype.makeDate = function(tweet) {
     var d = (tweet.created_at);
     var month = new Date(Date.parse(d)).getMonth()+1;
     var day = new Date(Date.parse(d)).getDate();
@@ -35,7 +35,7 @@ Tracker.makeDate(tweet) {
     return date;
 }
 
-Tracker.track(subjects, keywords) {
+Tracker.prototype.track = function(subjects, keywords) {
     this.t.immortalStream(
         'statuses/filter',
         { track: subjects },

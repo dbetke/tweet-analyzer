@@ -5,8 +5,10 @@
 var express = require('express')
   , routes = require('./routes');
 
-var tracker = require('./tracker');
-var subjectTracker = new tracker(['republican', 'democrat'], ['love', 'hate']);
+var Tracker = require('./Tracker');
+var subjectTracker = new Tracker();
+subjectTracker.track(["republican", "democrat"], ["love", "hate"]);
+//var subjectTracker = new tracker(['republican', 'democrat'], ['love', 'hate']);
 
 var cf = require('./cloudfoundry');
 
