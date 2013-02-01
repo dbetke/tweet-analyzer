@@ -14,7 +14,7 @@ function Tracker() {
     });
 }
 
-Tracker.redisSetup = function(host, port, password) {
+Tracker.prototype.redisSetup = function(host, port, password) {
     var redis_host =  cf.redis?cf.redis.credentials.host:'localhost';
     var redis_port = cf.redis?cf.redis.credentials.port:6379;
     var redis_password = cf.redis?cf.redis.credentials.password:undefined;
@@ -26,7 +26,7 @@ Tracker.redisSetup = function(host, port, password) {
     }
 }
 
-Tracker.makeDate = function(tweet) {
+Tracker.prototype.makeDate = function(tweet) {
     var d = (tweet.created_at);
     var month = new Date(Date.parse(d)).getMonth()+1;
     var day = new Date(Date.parse(d)).getDate();
@@ -36,13 +36,13 @@ Tracker.makeDate = function(tweet) {
     return date;
 }
 
-Tracker.track = function(subjects, keywords) {
+Tracker.prototype.track = function(subjects, keywords) {
     this.t.immortalStream(
         'statuses/filter',
         { track: subjects },
         function(stream) {
             stream.on('data', function(tweet) {
-                var date = Tracker.makeDate(tweet);
+                var date = Tracker.prototype.makeDate(tweet);
                 var keyword1_re = new RegExp('\s|^'+keywords[0]+'\s|$' + 'i'); 
                 var keyword2_re = new RegExp('\s|^'+keywords[1]+'\s|$' + 'i');
 
@@ -50,13 +50,13 @@ Tracker.track = function(subjects, keywords) {
                     if(tweet.text.match(subject)) {
                         if(tweet.text.match(keyword1_re)) {
                             client.hincrby(date, subject+keywords[0],'1', redis.print);
-			    console.log(subject + " " + keywords[0] + " " + tweet.text);
+			    console.log(subject + " " + keywords[0] + " : " + tweet.text); 
                         }
           
                         if(tweet.text.match(keyword2_re)) {
                             client.hincrby(date, subject+keywords[1], '1', redis.print);
-			    console.log(subject + " " + keywords[1] + " " + tweet.text);
-                        }
+ 			    console.log(subject + " " + keywords[1] + " : " + tweet.text); 
+                       }
                     }
                 });
             });
