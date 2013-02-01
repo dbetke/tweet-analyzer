@@ -2,6 +2,7 @@ var twitter = require('immortal-ntwitter');
 var redis = require('redis');
 var cf = require('./cloudfoundry');
 var credentials = require('./credentials.js');
+var client;
 
 function Tracker() {
     this.redisSetup();
@@ -13,19 +14,19 @@ function Tracker() {
     });
 }
 
-Tracker.prototype.redisSetup = function(host, port, password) {
+Tracker.redisSetup = function(host, port, password) {
     var redis_host =  cf.redis?cf.redis.credentials.host:'localhost';
     var redis_port = cf.redis?cf.redis.credentials.port:6379;
     var redis_password = cf.redis?cf.redis.credentials.password:undefined;
 
-    this.client = redis.createClient(redis_port, redis_host);
+    client = redis.createClient(redis_port, redis_host);
     
     if(cf.runningInTheCloud) {
-        this.client.auth(redis_password);
+        client.auth(redis_password);
     }
 }
 
-Tracker.prototype.makeDate = function(tweet) {
+Tracker.makeDate = function(tweet) {
     var d = (tweet.created_at);
     var month = new Date(Date.parse(d)).getMonth()+1;
     var day = new Date(Date.parse(d)).getDate();
@@ -35,7 +36,7 @@ Tracker.prototype.makeDate = function(tweet) {
     return date;
 }
 
-Tracker.prototype.track = function(subjects, keywords) {
+Tracker.track = function(subjects, keywords) {
     this.t.immortalStream(
         'statuses/filter',
         { track: subjects },
@@ -48,11 +49,13 @@ Tracker.prototype.track = function(subjects, keywords) {
                 subjects.forEach(function(subject) {
                     if(tweet.text.match(subject)) {
                         if(tweet.text.match(keyword1_re)) {
-                            this.client.hincrby(date, subject+keywords[0],'1', redis.print);
+                            client.hincrby(date, subject+keywords[0],'1', redis.print);
+			    console.log(subject + " " + keywords[0] + " " + tweet.text);
                         }
           
                         if(tweet.text.match(keyword2_re)) {
-                            this.client.hincrby(date, subject+keywords[1], '1', redis.print);
+                            client.hincrby(date, subject+keywords[1], '1', redis.print);
+			    console.log(subject + " " + keywords[1] + " " + tweet.text);
                         }
                     }
                 });
