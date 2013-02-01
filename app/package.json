@@ -1,11 +1,11 @@
 {
-    "name": "sentimenttracker"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.8"
-    , "ntwitter":""
-    , "redis":""
-    , "immortal-ntwitter":""
+    "name": "sentimenttracker", 
+    "version": "0.0.1", 
+    "private": true, 
+    "dependencies": {
+      "express"		:  "2.5.x", 
+      "redis"	    	:  "0.7.x", 
+      "mocha"		:  "1.8.x",
+      "immortal-ntwitter": "https://github.com/horixon/immortal-ntwitter/tarball/master"
   }
 }
