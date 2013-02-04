@@ -5,7 +5,7 @@
 var express = require('express')
   , routes = require('./routes');
 
-var Tracker = require('./Tracker');
+var Tracker = require('./tracker');
 var subjectTracker = new Tracker();
 subjectTracker.track(["bieber", "gaga"], ["love", "hate"]);
 //subjectTracker.track(["republican", "democrat"], ["love", "hate"]);
