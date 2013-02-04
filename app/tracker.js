@@ -43,19 +43,19 @@ Tracker.prototype.track = function(subjects, keywords) {
         function(stream) {
             stream.on('data', function(tweet) {
                 var date = Tracker.prototype.makeDate(tweet);
-                var keyword1_re = new RegExp('\s|^'+keywords[0]+'\s|$' + 'i'); 
-                var keyword2_re = new RegExp('\s|^'+keywords[1]+'\s|$' + 'i');
+                var keyword1_re = new RegExp("(\\s|^)" + keywords[0] + "(\\s|$)", "i"); 
+                var keyword2_re = new RegExp("(\\s|^)" + keywords[1] + "(\\s|$)", "i"); 
 
                 subjects.forEach(function(subject) {
                     if(tweet.text.match(subject)) {
                         if(tweet.text.match(keyword1_re)) {
                             client.hincrby(date, subject+keywords[0],'1', redis.print);
-			    console.log(subject + " " + keywords[0] + " : " + tweet.text); 
-                        }
+			    console.log(subject + " " + keywords[0] + " : \n" + tweet.text); 
+			}
           
                         if(tweet.text.match(keyword2_re)) {
                             client.hincrby(date, subject+keywords[1], '1', redis.print);
- 			    console.log(subject + " " + keywords[1] + " : " + tweet.text); 
+ 			    console.log(subject + " " + keywords[1] + " : \n" + tweet.text); 
                        }
                     }
                 });
