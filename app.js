@@ -7,7 +7,7 @@ var express = require('express')
 
 var Tracker = require('./tracker');
 var subjectTracker = new Tracker();
-subjectTracker.track(["bieber", "gaga"], ["love", "hate"]);
+subjectTracker.track(["bieber", "jesus"], ["love", "hate"]);
 //subjectTracker.track(["republican", "democrat"], ["love", "hate"]);
 
 var cf = require('./cloudfoundry');
