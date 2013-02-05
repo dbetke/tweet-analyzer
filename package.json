@@ -8,6 +8,7 @@
       "mocha"		:  "1.8.x",
       "immortal-ntwitter": "https://github.com/horixon/immortal-ntwitter/tarball/master",
       "mongodb"		:  "1.2.x",
-      "mongoose"	:  "3.5.x"
+      "mongoose"	:  "3.5.x",
+      "should"		:  "1.2.x"
   }
 }
