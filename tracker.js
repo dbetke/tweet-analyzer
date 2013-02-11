@@ -31,7 +31,7 @@ function Tracker() {
         var date = (year + "-" + month + "-" + day);
 
         return date;
-    }
+    };
 
     this.track = function(subjects, keywords) {
         t.immortalStream(
@@ -74,7 +74,8 @@ function Tracker() {
 
             } // f(stream)
         ); // t.immortalStream
-    } // track()
+    }; // track()
+
 }
 
 module.exports = Tracker;
