@@ -5,14 +5,13 @@ var assert = require("assert")
 
 describe("Tracker", function() {
     describe("#track()", function() {
-        it('should add counts to redis when tracking Bieber and Jesus', 
-                                                             function(done) {
+        it('should add counts to redis when tracking', function(done) {
             var tracker = new Tracker()
               , redisClient = redis.createClient();
 
             this.timeout(15000);
             redisClient.flushall();
-            tracker.track(["bieber", "jesus"], ["love", "hate"]);
+            tracker.track(["a"], ["love", "hate"]);
             setTimeout(function() {
                 var date = ("" + new Date().getFullYear() + "-" 
                                + (new Date().getMonth() + 1) + "-" 
@@ -20,12 +19,31 @@ describe("Tracker", function() {
 
                 redisClient.hgetall(date, function(err, result) {
                     if (err) throw err;
-                    console.log(result);
                     should.exist(result);
                     done();
                 });
             }, 5000);
-       }); 
+        }); 
+
+        it('should not add counts to tomorrow', function(done) {
+            var tracker = new Tracker()
+              , redisClient = redis.createClient();
+
+            this.timeout(15000);
+            redisClient.flushall();
+            tracker.track(["a"], ["love", "hate"]);
+            setTimeout(function() {
+                var date = ("" + new Date().getFullYear() + "-" 
+                               + (new Date().getMonth() + 1) + "-" 
+                               + (new Date().getDate()  + 1) );
+
+                redisClient.hgetall(date, function(err, result) {
+                    if (err) throw err;
+                    should.not.exist(result);
+                    done();
+                });
+            }, 5000);
+        }); 
     });
 
 });
