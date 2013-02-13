@@ -45,7 +45,7 @@ function Tracker() {
         var date = (year + "-" + month + "-" + day);
 
         return date;
-    }
+    };
 
     this.track = function(subjects, keywords) {
         t.immortalStream(
@@ -53,49 +53,57 @@ function Tracker() {
             { track: subjects },
             function(stream) {
                 stream.on('data', function(tweet) {
+                    if (tweet.text === undefined) {
+                        // data received is not actually a tweet
+                        return;
+                    }
+
                     var date = makeDate(tweet);
-		    var tweetString = JSON.stringify(tweet); //convert object to string for storage
+                    var tweetString = JSON.stringify(tweet); //convert object to string for storage
                     var keyword1_re = new RegExp("(\\s|^)" + keywords[0] + "(\\s|$)", "i"); 
                     var keyword2_re = new RegExp("(\\s|^)" + keywords[1] + "(\\s|$)", "i"); 
 
                     subjects.forEach(function(subject) {    
                         if(tweet.text.match(subject)) {
                             if(tweet.text.match(keyword1_re)) {
-				//increment count in redis db
+                                //increment count in redis db
                                 client.hincrby(date, subject+keywords[0],'1', redis.print);
-				//write to the console (for testing)
-				console.log(subject + " " + keywords[0] + "\nTweet: " + tweet.text);
-				//add to the database
-				collection.insert({subject: subject, keyword: keywords[0], date: date, tweet: tweetString}, {safe:true}, function(err, objects) {
-				    if (err){
-					console.log(err);
-				    }
-				    else{
-					//write to the console (for testing)
-					console.log("the tweet was saved to the database\n" + tweetString);
-				    }
-				});
-			     };
-              
+                                //write to the console (for testing)
+                                //console.log(subject + " " + keywords[0] + "\nTweet: " + tweet.text);
+                                //add to the database
+                                collection.insert({subject: subject, 
+                                                   keyword: keywords[0], 
+                                                   date: date, 
+                                                   tweet: tweetString}, 
+                                                  {safe:true}, 
+                                        function(err, objects) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        //write to the console (for testing)
+                                        //console.log("the tweet was saved to the database\n" + tweetString);
+                                    }
+                                });
+                            };
+
                             if(tweet.text.match(keyword2_re)) {
-				//increment count in redis db
+                                //increment count in redis db
                                 client.hincrby(date, subject+keywords[1], '1', redis.print);
                                 //write to the console (for testing)
-				console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text);
-				//add to the database
-				collection.insert({subject: subject, keyword: keywords[1], date: date, tweet: tweetString}, {safe:true}, function(err, objects) {
-				    if (err){
-					console.log(err);
-				    }
-				    else{
-					//write to the console (for testing)
-					console.log("the tweet was saved to the database\n" + tweetString);
-				    }
-				});
+                                //console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text);
+                                //add to the database
+                                collection.insert({subject: subject, keyword: keywords[1], date: date, tweet: tweetString}, {safe:true}, function(err, objects) {
+                                    if (err){
+                                        console.log(err);
+                                    } else {
+                                        //write to the console (for testing)
+                                        //console.log("the tweet was saved to the database\n" + tweetString);
+                                    }
+                                });
                             }
-                        }
-                    });
-                });
+                        } // if(tweet.text.match(subject))
+                    }); // subjects.forEach
+                }); // stream.on
                 
                 stream.on('error', function (err) {
                     console.log(err);
@@ -113,7 +121,8 @@ function Tracker() {
 
             } // f(stream)
         ); // t.immortalStream
-    } // track()
+    }; // track()
+
 }
 
 module.exports = Tracker;
