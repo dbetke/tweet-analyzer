@@ -40,17 +40,37 @@ describe("Tracker", function() {
             }, 5000);
         }); 
 
-        it.skip('should not add counts to tomorrow', function(done) {
+        it('should not add counts to tomorrow', function(done) {
             var tracker = new Tracker()
               , redisClient = redis.createClient();
 
             this.timeout(15000);
             redisClient.flushall();
-            tracker.track(["a"], ["love", "hate"]);
+            tracker.track(["a", "i"], ["love", "hate"]);
             setTimeout(function() {
                 var date = ("" + new Date().getFullYear() + "-" 
                                + (new Date().getMonth() + 1) + "-" 
                                + (new Date().getDate()  + 1) );
+
+                redisClient.hgetall(date, function(err, result) {
+                    if (err) throw err;
+                    should.not.exist(result);
+                    done();
+                });
+            }, 5000);
+        }); 
+
+        it('should not add counts to yesterday', function(done) {
+            var tracker = new Tracker()
+              , redisClient = redis.createClient();
+
+            this.timeout(15000);
+            redisClient.flushall();
+            tracker.track(["a", "i"], ["love", "hate"]);
+            setTimeout(function() {
+                var date = ("" + new Date().getFullYear() + "-" 
+                               + (new Date().getMonth() + 1) + "-" 
+                               + (new Date().getDate()  - 1) );
 
                 redisClient.hgetall(date, function(err, result) {
                     if (err) throw err;

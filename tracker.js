@@ -53,6 +53,11 @@ function Tracker() {
             { track: subjects },
             function(stream) {
                 stream.on('data', function(tweet) {
+                    if (tweet.text === undefined) {
+                        // data received is not actually a tweet
+                        return;
+                    }
+
                     var date = makeDate(tweet);
                     var tweetString = JSON.stringify(tweet); //convert object to string for storage
                     var keyword1_re = new RegExp("(\\s|^)" + keywords[0] + "(\\s|$)", "i"); 
@@ -64,7 +69,7 @@ function Tracker() {
                                 //increment count in redis db
                                 client.hincrby(date, subject+keywords[0],'1', redis.print);
                                 //write to the console (for testing)
-                                console.log(subject + " " + keywords[0] + "\nTweet: " + tweet.text);
+                                //console.log(subject + " " + keywords[0] + "\nTweet: " + tweet.text);
                                 //add to the database
                                 collection.insert({subject: subject, 
                                                    keyword: keywords[0], 
@@ -76,7 +81,7 @@ function Tracker() {
                                         console.log(err);
                                     } else {
                                         //write to the console (for testing)
-                                        console.log("the tweet was saved to the database\n" + tweetString);
+                                        //console.log("the tweet was saved to the database\n" + tweetString);
                                     }
                                 });
                             };
@@ -85,15 +90,14 @@ function Tracker() {
                                 //increment count in redis db
                                 client.hincrby(date, subject+keywords[1], '1', redis.print);
                                 //write to the console (for testing)
-                                console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text);
+                                //console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text);
                                 //add to the database
                                 collection.insert({subject: subject, keyword: keywords[1], date: date, tweet: tweetString}, {safe:true}, function(err, objects) {
                                     if (err){
-                                    console.log(err);
-                                    }
-                                    else{
-                                    //write to the console (for testing)
-                                    console.log("the tweet was saved to the database\n" + tweetString);
+                                        console.log(err);
+                                    } else {
+                                        //write to the console (for testing)
+                                        //console.log("the tweet was saved to the database\n" + tweetString);
                                     }
                                 });
                             }
