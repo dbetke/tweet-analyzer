@@ -1,23 +1,25 @@
-var twitter = require('immortal-ntwitter');
-var redis = require('redis');
-var cf = require('./cloudfoundry');
-var credentials = require('./credentials.js');
-var mongoose = require('mongoose');
-var db = mongoose.connection;
+var twitter = require('immortal-ntwitter'),
+    redis = require('redis'),
+    cf = require('./cloudfoundry'),
+    credentials = require('./credentials.js'),
+    mongodb = require('mongodb'),
+    mongoclient = require('mongodb').Client;
 
-mongoose.connect('mongodb://localhost/tweets'); //connect to the tweets database
+var collection; //mongo database collection
+var server = new mongodb.Server("127.0.0.1", 27017, {});
 
-var db = mongoose.connection; 
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-	console.log("mongodb is connected!!");
+new mongodb.Db('tweets', server, {w:1}).open(function (error, client) {
+  if (error){
+      console.log(error);
+  }
+  else{
+      collection = new mongodb.Collection(client, 'tweets');
+      console.log('mongodb is connected!');
+  }
 });
-
-var Tweet = require('./models/tweet'); //require model, pull in model created
 
 function Tracker() {
     var client;
-    
     var redis_host =  cf.redis?cf.redis.credentials.host:'localhost';
     var redis_port = cf.redis?cf.redis.credentials.port:6379;
     var redis_password = cf.redis?cf.redis.credentials.password:undefined;
@@ -59,31 +61,37 @@ function Tracker() {
                     subjects.forEach(function(subject) {    
                         if(tweet.text.match(subject)) {
                             if(tweet.text.match(keyword1_re)) {
+				//increment count in redis db
                                 client.hincrby(date, subject+keywords[0],'1', redis.print);
+				//write to the console (for testing)
 				console.log(subject + " " + keywords[0] + "\nTweet: " + tweet.text);
-				var newTweet = new Tweet({subject: subject, keyword: keywords[0], date : date, tweet : tweetString});
-				newTweet.save(function(err, newTweet){
+				//add to the database
+				collection.insert({subject: subject, keyword: keywords[0], date: date, tweet: tweetString}, {safe:true}, function(err, objects) {
 				    if (err){
-				      console.log(err);
+					console.log(err);
 				    }
 				    else{
-				      console.log("the tweet was saved to the database\n"); 
+					//write to the console (for testing)
+					console.log("the tweet was saved to the database\n" + tweetString);
 				    }
-			       });
+				});
 			     };
               
                             if(tweet.text.match(keyword2_re)) {
+				//increment count in redis db
                                 client.hincrby(date, subject+keywords[1], '1', redis.print);
-                                console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text); 
-				var newTweet = new Tweet({subject: subject, keyword: keywords[1], date : date, tweet : tweetString});
-				newTweet.save(function(err, newTweet){
+                                //write to the console (for testing)
+				console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text);
+				//add to the database
+				collection.insert({subject: subject, keyword: keywords[1], date: date, tweet: tweetString}, {safe:true}, function(err, objects) {
 				    if (err){
-				      console.log(err);
+					console.log(err);
 				    }
 				    else{
-				      console.log("the tweet was saved to the database\n"); 
+					//write to the console (for testing)
+					console.log("the tweet was saved to the database\n" + tweetString);
 				    }
-			       });
+				});
                             }
                         }
                     });
