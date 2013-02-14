@@ -79,6 +79,10 @@ describe("Tracker", function() {
                 });
             }, 5000);
         }); 
+
+        it.skip('should add tweet to database', function(done) {
+
+        });
     });
 
 });
