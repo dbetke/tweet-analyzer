@@ -8,16 +8,6 @@ var twitter = require('immortal-ntwitter'),
 var collection; //mongo database collection
 var server = new mongodb.Server("127.0.0.1", 27017, {});
 
-new mongodb.Db('tweets', server, {w:1}).open(function (error, client) {
-  if (error){
-      console.log(error);
-  }
-  else{
-      collection = new mongodb.Collection(client, 'tweets');
-      console.log('mongodb is connected!');
-  }
-});
-
 function Tracker() {
     var client;
     var redis_host =  cf.redis?cf.redis.credentials.host:'localhost';
@@ -46,6 +36,18 @@ function Tracker() {
 
         return date;
     };
+
+    this.UseCollection = function(dbName, collectionName){
+	new mongodb.Db(dbName, server, {w:1}).open(function (error, client) {
+	    if (error){
+		console.log(error);
+	    }
+	    else{
+		collection = new mongodb.Collection(client, collectionName);
+		console.log('mongodb is connected!');
+	    }
+	});
+    }
 
     this.track = function(subjects, keywords) {
         t.immortalStream(

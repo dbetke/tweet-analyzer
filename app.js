@@ -7,8 +7,8 @@ var express = require('express')
 
 var Tracker = require('./tracker');
 var subjectTracker = new Tracker();
+subjectTracker.UseCollection('tweetdb', 'tweets'); //set db name and collection name
 subjectTracker.track(["bieber", "jesus"], ["love", "hate"]);
-//subjectTracker.track(["republican", "democrat"], ["love", "hate"]);
 
 var cf = require('./cloudfoundry');
 
