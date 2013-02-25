@@ -7,32 +7,17 @@ var assert = require("assert")
   , mongoclient = require("mongodb").Client
   , twitter = require('immortal-ntwitter')
   , credentials = require('../credentials.js')
+  , Tracker = require('../tracker');
   ;
 
-var t = new twitter({
-    consumer_key: credentials.consumer_key,
-    consumer_secret: credentials.consumer_secret,
-    access_token_key: credentials.access_token_key,
-    access_token_secret: credentials.access_token_secret
-});
-
 describe("Tracker", function() {
+var tracker = new Tracker();
+var server = new mongodb.Server("127.0.0.1", 27017, {});
+var db = 'testTweetDb';
+var collection = 'testTweets';
+var redisClient;
 
-	var redisClient;
-	var collection; //mongo database collection
-	var server = new mongodb.Server("127.0.0.1", 27017, {});
-
-	it('should connect to mongodb', function(done){
-	    new mongodb.Db('tweets', server, {w:1}).open(function (error, client) {
-		if (error) throw error;
-		else{
-		    collection = new mongodb.Collection(client, 'tweets_test');
-		    done();
-		}
-	    });
-	});
-
-	it('should connect to redis', function(done){
+    	it('should connect to redis', function(done){
 	    redisClient = redis.createClient();
 	    should.exist(redisClient);
 	    done();
@@ -56,47 +41,43 @@ describe("Tracker", function() {
 	
     });//end describe makeDate
 
+    describe("#UseCollection()", function(){
+	it('should connect to mongodb', function(done){
+	    tracker.UseCollection(db, collection);
+	    //TODO: Add test to verify collection was created properly (how to connect to database after using method to create?)
+	    done();
+	});
+    }); //end describe UseCollection
 
     describe("#track()", function(){
-
-	var subject = ["a", "i"];
-	var keyword;
+	var subject = ['a', 'i'];
+	var keyword = ['love', 'hate'];
 	var exists;
 
-	function track(subject){
-	    console.log(subject);
-	    t.immortalStream(
-		'statuses/filter',
-		{ track: subject },
-		function(stream) {
-                    stream.on('data', function(tweet) {
-			if (tweet.text === undefined) {
-                            // data received is not actually a tweet
-                            return;
-			}
-			
-			else{
-			    return 'success';
-			}
-		    });//end stream.on
-		}//end stream	
-	    );//end t.immortal stream
-	}//end track function
+		
+	it('should add counts to redis when tracking', function(done) {                                                                                                       
+            this.timeout(25000);
+            redisClient.flushall();
+            tracker.track(subject, keyword);
+            setTimeout(function() {
+                var date = ("" + new Date().getFullYear() + "-" 
+                               + (new Date().getMonth() + 1) + "-" 
+                               + new Date().getDate() );
 
-/*
-	//TODO: Figure out why this test continually fails
-	it('should track some tweets', function(done){
-	    var result = "";
-	    result = track(subject);
-	    this.timeout(25000);
-	    setTimeout(function(){
-		if(result == 'success'){
-		    done();
-		}
-	    }, 5000);
+                redisClient.hgetall(date, function(err, result) {
+                    if (err) throw err;
+                    should.exist(result);
+                    done();
+                });
+            }, 5000);                              
 	});
-	    
-*/
+
+	it('should add tweets to mongodb', function(done){
+	    //TODO: add test to verify tracked tweets are being saved to mongo
+	    done();
+	});
+
+
 	it('should use regular expressions to match keywords to tweets', function(done){
 	    keyword = ["love", "hate"]
 	    var testTweet1 = 'i love this test';
