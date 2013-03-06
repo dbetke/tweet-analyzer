@@ -12,6 +12,7 @@ function Tracker() {
         collection, //mongo database collection
         prefix,
         server = new mongodb.Server("127.0.0.1", 27017, {}),
+        mongoClient,
         redis_host =  cf.redis ? cf.redis.credentials.host : 'localhost',
         redis_port = cf.redis ? cf.redis.credentials.port : 6379,
         redis_password = cf.redis ? cf.redis.credentials.password : undefined,
@@ -38,7 +39,8 @@ function Tracker() {
     }
 
     this.UseCollection = function (dbName, collectionName) {
-        new mongodb.Db(dbName, server, {w: 1}).open(function (error, client) {
+        mongoClient = new mongodb.Db(dbName, server, {w: 1});
+	mongoClient.open(function (error, client) {
             if (error) {
                 console.log(error);
             } else {
@@ -47,6 +49,10 @@ function Tracker() {
             }
         });
     };
+
+    this.removeDatabase = function(){
+	mongoClient.dropDatabase();
+    }
 
     this.usePrefix = function (pre) {
         prefix = pre;

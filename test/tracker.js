@@ -56,7 +56,7 @@ describe("Tracker", function () {
             prefix = tracker.usePrefix('MochaTest-');
             prefix.should.equal('MochaTest-');
         });
-    });
+    }); //end descript usePrefix
 
     describe("#track()", function () {
         var subject = ['a', 'i'],
@@ -109,12 +109,13 @@ describe("Tracker", function () {
 
         //CLEAR DATABASE AFTER TESTS ARE COMPLETE
         after(function (done) {
+	    //remove all tests from redis
             redisClient.hdel(date, prefix + subject[0] + keyword[0]);
             redisClient.hdel(date, prefix + subject[0] + keyword[1]);
             redisClient.hdel(date, prefix + subject[1] + keyword[0]);
             redisClient.hdel(date, prefix + subject[1] + keyword[1]);
-
-            //TODO: add code to drop database and close connection
+	    //delete the test database from mongo
+	    tracker.removeDatabase();
             done();
         });
 
