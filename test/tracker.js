@@ -13,11 +13,9 @@ var assert = require("assert"),
 describe("Tracker", function () {
     var tracker = new Tracker(),
         server = new mongodb.Server("127.0.0.1", 27017, {}),
-        db = 'testTweetDb',
-        collection = 'testTweets',
         redisClient,
         prefix,
-        mongoClient;
+        collection;
 
     it('should connect to redis', function (done) {
         redisClient = redis.createClient();
@@ -45,9 +43,8 @@ describe("Tracker", function () {
 
     describe("#UseCollection()", function () {
         it('should connect to mongodb', function (done) {
-            tracker.UseCollection(db, collection);
-            //TODO: Add test to verify collection was created properly (how to connect to database after using method to create?)
-            done();
+            collection = tracker.UseCollection('testTweetDb', 'testTweets');
+	    done();
         });
     }); //end describe UseCollection
 
@@ -64,7 +61,7 @@ describe("Tracker", function () {
             exists,
             date;
 
-        it('should add counts to redis when tracking', function (done) {
+        it('should add counts to redis and tweets to mongodb when tracking', function (done) {
             this.timeout(25000);
             tracker.track(subject, keyword);
             setTimeout(function () {
@@ -74,18 +71,24 @@ describe("Tracker", function () {
                     if (err) {
                         throw err;
                     }
-                    //add results for test - testing for result should not equal [null, null, null, null] does not work, test passes regardless
+
                     result = result[0] + result[1] + result[2] + result[3];
                     result.should.not.equal(0);
                 });
-                done();
+
+               done();
             }, 5000);
         });
 
-        it('should add tweets to mongodb', function (done) {
-            //TODO: add test to verify tracked tweets are being saved to mongo
-            done();
-        });
+	it('should return all redis counts for specified date, prefix, subject, and keyword', function () {
+	    for (var sub in subject) {
+		for (var key in keyword) {
+		    tracker.getRedisResults(date, prefix, subject[sub], keyword[key], function (result) {
+			result.should.exist;
+		    });	
+		}
+	    }
+	});
 
         it('should use regular expressions to match keywords to tweets', function (done) {
             keyword = ["love", "hate"];
@@ -101,10 +104,6 @@ describe("Tracker", function () {
             } else {
                 throw 'uh oh: matching problem!';
             }
-
-            //TODO: Look into why the following convention will not work (times out)
-            //testTweet1.should.match(keyword1_re);
-            //testTweet2.should.match(keyword2_re);
         });
 
         //CLEAR DATABASE AFTER TESTS ARE COMPLETE

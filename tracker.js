@@ -42,7 +42,7 @@ function Tracker() {
         mongoClient = new mongodb.Db(dbName, server, {w: 1});
 	mongoClient.open(function (error, client) {
             if (error) {
-                console.log(error);
+                throw error;
             } else {
                 collection = new mongodb.Collection(client, collectionName);
                 console.log('mongodb is connected!');
@@ -90,7 +90,7 @@ function Tracker() {
                                     });
 
 				    //write to the console (for testing)
-                                    console.log(subject + " " + keywords[keyword] + "\nTweet: " + tweet.text);
+                                    //console.log(subject + " " + keywords[keyword] + "\nTweet: " + tweet.text);
 				}
 			    }
                         } 
@@ -116,6 +116,15 @@ function Tracker() {
         ); // t.immortalStream
     }; // track()
 
+    this.getRedisResults = function (dt, pre, sub, key, callback) {
+	client.hget(dt, pre + sub + key, function (err, result) {
+            if (err) {
+                return callback(err);
+            } else {
+		return callback(result);
+	    }
+        });
+    };
 }
 
 module.exports = Tracker;
