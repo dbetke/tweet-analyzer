@@ -1,3 +1,5 @@
+/*  COMMENTING OUT FOR NOW - MOVED APP AND TRACKER TESTS INTO SEPARATE FILES, CHANGING TESTS
+
 var assert = require("assert")
   , Tracker = require("../tracker")
   , redis = require("redis")
@@ -94,3 +96,4 @@ describe("Tracker", function() {
 
 });
 
+*/
