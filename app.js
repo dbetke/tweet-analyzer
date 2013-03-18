@@ -9,6 +9,7 @@ var Tracker = require('./tracker');
 var subjectTracker = new Tracker();
 subjectTracker.UseCollection('tweetdb', 'tweets'); //set db name and collection name
 subjectTracker.track(["bieber", "jesus"], ["love", "hate"]);
+subjectTracker.usePrefix('NINA-');
 
 var cf = require('./cloudfoundry');
 
