@@ -50,12 +50,12 @@ function Tracker() {
         });
     };
 
-    this.removeDatabase = function(){
+    this.removeDatabase = function () {
 	mongoClient.dropDatabase();
     }
 
     this.usePrefix = function (pre) {
-        prefix = pre;
+	prefix = pre;
         return prefix;
     };
 
@@ -71,40 +71,32 @@ function Tracker() {
                     }
 
                     var date = makeDate(tweet),
-                        tweetString = JSON.stringify(tweet), //convert object to string for storage
-                        keyword1_re = new RegExp("(\\s|^)" + keywords[0] + "(\\s|$)", "i"),
-                        keyword2_re = new RegExp("(\\s|^)" + keywords[1] + "(\\s|$)", "i");
+                        tweetString = JSON.stringify(tweet); //convert object to string for storage
 
                     subjects.forEach(function (subject) {
                         if (tweet.text.match(subject)) {
-                            if (tweet.text.match(keyword1_re)) {
-                                //increment count in redis db
-                                client.hincrby(date, prefix + subject + keywords[0], '1', redis.print);
-                                //write to the console (for testing)
-                                //console.log(subject + " " + keywords[0] + "\nTweet: " + tweet.text);
-                                //add to the database
-                                collection.insert({subject : subject, keyword : keywords[0], date : date, tweet : tweetString}, {safe : true}, function (err, objects) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                });
-                            }
+			    for (var keyword in keywords) {
+				var keyword_re = new RegExp("(\\s|^)" + keywords[keyword] + "(\\s|$)", "i");
 
-                            if (tweet.text.match(keyword2_re)) {
-                                //increment count in redis db
-                                client.hincrby(date, prefix + subject + keywords[1], '1', redis.print);
-                                //write to the console (for testing)
-                                //console.log(subject + " " + keywords[1] + "\nTweet: " + tweet.text);
-                                //add to the database
-                                collection.insert({subject : subject, keyword : keywords[1], date : date, tweet : tweetString}, {safe : true}, function (err, objects) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                });
-                            }
-                        } // if(tweet.text.match(subject))
-                    }); // subjects.forEach
-                }); // stream.on
+				if (tweet.text.match(keyword_re)) {
+                                    //increment count in redis db
+                                    client.hincrby(date, prefix + subject + keywords[keyword], '1', redis.print);
+                                    
+                                    //add to the database
+                                    collection.insert({subject : subject, keyword : keywords[keyword], date : date, tweet : tweetString}, {safe : true}, function (err, objects) {
+					if (err) {
+                                            console.log(err);
+					}
+                                    });
+
+				    //write to the console (for testing)
+                                    console.log(subject + " " + keywords[keyword] + "\nTweet: " + tweet.text);
+				}
+			    }
+                        } 
+		    });
+				     
+		});
 
                 stream.on('error', function (err) {
                     console.log(err);
