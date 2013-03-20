@@ -81,6 +81,17 @@ describe("Tracker", function() {
                 });
             }, 5000);
         }); 
+
+        it.skip('should add tweet to database', function(done) {
+            var tracker = new Tracker();
+
+            this.timeout(15000);
+            tracker.track(["a", "i"], ["love", "hate"]);
+            setTimeout(function () {
+                
+            }, 5000);
+
+        });
     });
 
 });

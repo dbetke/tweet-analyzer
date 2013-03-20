@@ -36,6 +36,10 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
+app.get('/destroy', function(req, res) {
+    subjectTracker.destroy();
+    res.send("Tracker destroyed.");
+});
 app.get('/count/:field/:expr', routes.regex);
 app.get('/:date', routes.date);
 
