@@ -8,7 +8,8 @@ var Twitter = require('immortal-ntwitter'),
     mongoclient = require('mongodb').Client;
 
 function Tracker() {
-    var client,
+    var self = this,
+        client,
         collection, //mongo database collection
         prefix,
         server = new mongodb.Server("127.0.0.1", 27017, {}),
@@ -64,6 +65,10 @@ function Tracker() {
             'statuses/filter',
             { track: subjects },
             function (stream) {
+                self.destroy = function() {
+                    stream.destroy();
+                };
+
                 stream.on('data', function (tweet) {
                     if (tweet.text === undefined) {
                         // data received is not actually a tweet
@@ -122,6 +127,7 @@ function Tracker() {
 	    }
         });
     };
+
 }
 
 module.exports = Tracker;
