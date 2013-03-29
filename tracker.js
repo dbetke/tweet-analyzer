@@ -83,14 +83,11 @@ function Tracker() {
                                     client.hincrby(date, prefix + subject + keywords[keyword], '1', redis.print);
                                     
                                     //add to the database
-                                    collection.insert({subject : subject, keyword : keywords[keyword], date : date, tweet : tweetString}, {safe : true}, function (err, objects) {
+                                    collection.insert({subject : subject, keyword : keywords[keyword], date : date, tweet : tweetString, tweetText : tweet.text}, {safe : true}, function (err, objects) {
 					if (err) {
                                             console.log(err);
 					}
                                     });
-
-				    //write to the console (for testing)
-                                    //console.log(subject + " " + keywords[keyword] + "\nTweet: " + tweet.text);
 				}
 			    }
                         } 
