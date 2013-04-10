@@ -1,0 +1,172 @@
+{
+  "name": "sentimenttracker",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": {
+      "version": "2.5.11",
+      "from": "express@2.5.x",
+      "resolved": "https://registry.npmjs.org/express/-/express-2.5.11.tgz",
+      "dependencies": {
+        "connect": {
+          "version": "1.9.2",
+          "from": "connect@1.x",
+          "resolved": "https://registry.npmjs.org/connect/-/connect-1.9.2.tgz",
+          "dependencies": {
+            "formidable": {
+              "version": "1.0.11",
+              "from": "formidable@1.0.x",
+              "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.11.tgz"
+            }
+          }
+        },
+        "mime": {
+          "version": "1.2.4",
+          "from": "mime@1.2.4",
+          "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.4.tgz"
+        },
+        "qs": {
+          "version": "0.4.2",
+          "from": "qs@0.4.x",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-0.4.2.tgz"
+        },
+        "mkdirp": {
+          "version": "0.3.0",
+          "from": "mkdirp@0.3.0",
+          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.0.tgz"
+        }
+      }
+    },
+    "redis": {
+      "version": "0.7.3",
+      "from": "redis@0.7.x",
+      "resolved": "https://registry.npmjs.org/redis/-/redis-0.7.3.tgz"
+    },
+    "mocha": {
+      "version": "1.8.1",
+      "from": "mocha@1.8.x",
+      "resolved": "https://registry.npmjs.org/mocha/-/mocha-1.8.1.tgz",
+      "dependencies": {
+        "commander": {
+          "version": "0.6.1",
+          "from": "commander@0.6.1",
+          "resolved": "https://registry.npmjs.org/commander/-/commander-0.6.1.tgz"
+        },
+        "growl": {
+          "version": "1.7.0",
+          "from": "growl@1.7.x",
+          "resolved": "https://registry.npmjs.org/growl/-/growl-1.7.0.tgz"
+        },
+        "jade": {
+          "version": "0.26.3",
+          "from": "jade@0.26.3",
+          "resolved": "https://registry.npmjs.org/jade/-/jade-0.26.3.tgz",
+          "dependencies": {
+            "mkdirp": {
+              "version": "0.3.0",
+              "from": "mkdirp@0.3.0",
+              "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.0.tgz"
+            }
+          }
+        },
+        "diff": {
+          "version": "1.0.2",
+          "from": "diff@1.0.2",
+          "resolved": "https://registry.npmjs.org/diff/-/diff-1.0.2.tgz"
+        },
+        "debug": {
+          "version": "0.7.0",
+          "from": "debug@*",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-0.7.0.tgz"
+        },
+        "mkdirp": {
+          "version": "0.3.3",
+          "from": "mkdirp@0.3.3",
+          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.3.tgz"
+        },
+        "ms": {
+          "version": "0.3.0",
+          "from": "ms@0.3.0",
+          "resolved": "https://registry.npmjs.org/ms/-/ms-0.3.0.tgz"
+        }
+      }
+    },
+    "immortal-ntwitter": {
+      "version": "0.0.4",
+      "from": "https://github.com/horixon/immortal-ntwitter/tarball/master",
+      "resolved": "https://github.com/horixon/immortal-ntwitter/tarball/master",
+      "dependencies": {
+        "ntwitter": {
+          "version": "0.5.0",
+          "from": "ntwitter@>0.2.10",
+          "resolved": "https://registry.npmjs.org/ntwitter/-/ntwitter-0.5.0.tgz",
+          "dependencies": {
+            "oauth": {
+              "version": "0.9.8",
+              "from": "oauth@>=0.8.4",
+              "resolved": "https://registry.npmjs.org/oauth/-/oauth-0.9.8.tgz"
+            },
+            "cookies": {
+              "version": "0.1.6",
+              "from": "cookies@0.1.x",
+              "resolved": "https://registry.npmjs.org/cookies/-/cookies-0.1.6.tgz"
+            },
+            "keygrip": {
+              "version": "0.2.2",
+              "from": "keygrip@0.2.x",
+              "resolved": "https://registry.npmjs.org/keygrip/-/keygrip-0.2.2.tgz"
+            }
+          }
+        }
+      }
+    },
+    "mongodb": {
+      "version": "1.2.11",
+      "from": "mongodb@1.2.x",
+      "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-1.2.11.tgz",
+      "dependencies": {
+        "bson": {
+          "version": "0.1.6",
+          "from": "bson@0.1.6",
+          "resolved": "https://registry.npmjs.org/bson/-/bson-0.1.6.tgz"
+        }
+      }
+    },
+    "mongoose": {
+      "version": "3.5.5",
+      "from": "mongoose@3.5.x",
+      "resolved": "https://registry.npmjs.org/mongoose/-/mongoose-3.5.5.tgz",
+      "dependencies": {
+        "hooks": {
+          "version": "0.2.1",
+          "from": "hooks@0.2.1",
+          "resolved": "https://registry.npmjs.org/hooks/-/hooks-0.2.1.tgz"
+        },
+        "ms": {
+          "version": "0.1.0",
+          "from": "ms@0.1.0",
+          "resolved": "https://registry.npmjs.org/ms/-/ms-0.1.0.tgz"
+        },
+        "sliced": {
+          "version": "0.0.3",
+          "from": "sliced@0.0.3",
+          "resolved": "https://registry.npmjs.org/sliced/-/sliced-0.0.3.tgz"
+        },
+        "muri": {
+          "version": "0.1.0",
+          "from": "muri@0.1.0",
+          "resolved": "https://registry.npmjs.org/muri/-/muri-0.1.0.tgz"
+        }
+      }
+    },
+    "should": {
+      "version": "1.2.1",
+      "from": "should@1.2.x",
+      "resolved": "https://registry.npmjs.org/should/-/should-1.2.1.tgz"
+    },
+    "ping": {
+      "version": "0.1.1",
+      "from": "ping@0.1.x",
+      "resolved": "https://registry.npmjs.org/ping/-/ping-0.1.1.tgz"
+    }
+  }
+}
