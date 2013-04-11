@@ -3,13 +3,13 @@
     "version": "0.0.1", 
     "private": true,
     "dependencies": {
-      "express"		:  "2.5.x", 
-      "redis"	    	:  "0.7.x", 
-      "mocha"		:  "1.8.x",
+      "express"         :  "2.5.x", 
+      "redis"           :  "0.7.x", 
+      "mocha"           :  "1.8.x",
       "immortal-ntwitter": "https://github.com/horixon/immortal-ntwitter/tarball/master",
-      "mongodb"		:  "1.2.x",
-      "mongoose"	:  "3.5.x",
-      "should"		:  "1.2.x",
+      "mongodb"         :  "1.2.x",
+      "mongoose"        :  "3.5.x",
+      "should"          :  "1.2.x",
       "ping"        :  "0.1.x"
     }
 }

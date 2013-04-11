@@ -33,7 +33,7 @@ function Tracker() {
 
     this.UseCollection = function (dbName, collectionName) {
         mongoClient = new mongodb.Db(dbName, server, {w: 1});
-	mongoClient.open(function (error, client) {
+        mongoClient.open(function (error, client) {
             if (error) {
                 throw error;
             } else {
@@ -44,11 +44,11 @@ function Tracker() {
     };
 
     this.removeDatabase = function () {
-	mongoClient.dropDatabase();
+        mongoClient.dropDatabase();
     }
 
     this.usePrefix = function (pre) {
-	prefix = pre;
+        prefix = pre;
         return prefix;
     };
 
@@ -72,25 +72,25 @@ function Tracker() {
 
                     subjects.forEach(function (subject) {
                         if (tweet.text.match(subject)) {
-			    for (var keyword in keywords) {
-				var keyword_re = new RegExp("(\\s|^)" + keywords[keyword] + "(\\s|$)", "i");
+                            for (var keyword in keywords) {
+                                var keyword_re = new RegExp("(\\s|^)" + keywords[keyword] + "(\\s|$)", "i");
 
-				if (tweet.text.match(keyword_re)) {
+                                if (tweet.text.match(keyword_re)) {
                                     //increment count in redis db
                                     client.hincrby(date, prefix + subject + keywords[keyword], '1', redis.print);
                                     
                                     //add to the database
                                     collection.insert({subject : subject, keyword : keywords[keyword], date : date, tweet : tweetString, tweetText : tweet.text}, {safe : true}, function (err, objects) {
-					if (err) {
+                                        if (err) {
                                             console.log(err);
-					}
+                                        }
                                     });
-				}
-			    }
+                                }
+                            }
                         } 
-		    });
-				     
-		});
+                    });
+                                     
+                });
 
                 stream.on('error', function (err) {
                     console.log(err);
@@ -111,12 +111,12 @@ function Tracker() {
     }; // track()
 
     this.getRedisResults = function (dt, pre, sub, key, callback) {
-	client.hget(dt, pre + sub + key, function (err, result) {
+        client.hget(dt, pre + sub + key, function (err, result) {
             if (err) {
                 return callback(err);
             } else {
-		return callback(result);
-	    }
+                return callback(result);
+            }
         });
     };
 
