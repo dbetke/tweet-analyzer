@@ -1,14 +1,5 @@
 var redis = require('redis');
-var cf = require('../cloudfoundry');
-
-var redis_host =  cf.redis?cf.redis.credentials.host:'localhost';
-var redis_port = cf.redis?cf.redis.credentials.port:6379;
-var redis_password = cf.redis?cf.redis.credentials.password:undefined;
-
-var client = redis.createClient(redis_port, redis_host);
-if(cf.runningInTheCloud) {
-    client.auth(redis_password);
-}
+var client = redis.createClient();
 
 /*
  * GET home page.

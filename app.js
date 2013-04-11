@@ -11,9 +11,7 @@ subjectTracker.UseCollection('tweetdb', 'tweets'); //set db name and collection 
 subjectTracker.track(["dogs", "cats"], ["love", "hate"]);
 subjectTracker.usePrefix('NINA-');
 
-var cf = require('./cloudfoundry');
-
-var app = module.exports = express.createServer();
+var app = module.exports = express();
 
 // Configuration
 
@@ -43,6 +41,6 @@ app.get('/destroy', function(req, res) {
 app.get('/count/:field/:expr', routes.regex);
 app.get('/:date', routes.date);
 
-app.listen(cf.port || 3000, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port " + process.env.PORT);
 });

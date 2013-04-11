@@ -2,7 +2,6 @@
 
 var Twitter = require('immortal-ntwitter'),
     redis = require('redis'),
-    cf = require('./cloudfoundry'),
     credentials = require('./credentials.js'),
     mongodb = require('mongodb'),
     mongoclient = require('mongodb').Client;
@@ -14,9 +13,6 @@ function Tracker() {
         prefix,
         server = new mongodb.Server("127.0.0.1", 27017, {}),
         mongoClient,
-        redis_host =  cf.redis ? cf.redis.credentials.host : 'localhost',
-        redis_port = cf.redis ? cf.redis.credentials.port : 6379,
-        redis_password = cf.redis ? cf.redis.credentials.password : undefined,
         t = new Twitter({
             consumer_key: credentials.consumer_key,
             consumer_secret: credentials.consumer_secret,
@@ -33,11 +29,7 @@ function Tracker() {
             return date;
         };
 
-    client = redis.createClient(redis_port, redis_host);
-
-    if (cf.runningInTheCloud) {
-        client.auth(redis_password);
-    }
+    client = redis.createClient();
 
     this.UseCollection = function (dbName, collectionName) {
         mongoClient = new mongodb.Db(dbName, server, {w: 1});
